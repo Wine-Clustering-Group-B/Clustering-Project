@@ -3,8 +3,11 @@ import numpy as np
 import pandas as pd
 import os 
 
-
-
+# spliting data
+from sklearn.model_selection import train_test_split
+import sklearn
+from sklearn.preprocessing import MinMaxScaler
+    
 
 
 #--------------- Data Acqusition -------------------#
@@ -113,11 +116,53 @@ def clean_wine(df):
     
     
     #encoding 
-    dummy = {'red' : 1, 'white': 0}
-    df['wine_color'] = df['wine_color'].map(dummy)
+    df['is_white'] = df['wine_color'].map({'red': 1, 'white': 0})
     
     # change data types:
     df['quality'] = df['quality'].astype(float)
-    df['wine_color'] = df['wine_color'].astype(float)
+    df['is_white'] = df['is_white'].astype(float)
     
     return df
+
+
+
+
+
+#----------Split Funciton--------#
+def split_data(df, target, seed=123):
+    '''
+    This function takes in a dataframe and splits the data into train, validate and test. 
+    - The test data set is 20
+    - Then the data frame is split 70% train, 30% validate
+    '''
+    train_validate, test = train_test_split(df, test_size=0.2, random_state=seed)
+    
+    train, validate = train_test_split(train_validate, test_size=0.3, random_state=seed)
+    return train, validate, test
+
+
+
+
+#----------Min Max Scaler--------#
+def scale_data(train, 
+               validate, 
+               test, 
+               to_scale):
+    #make copies for scaling
+    train_scaled = train.copy()
+    validate_scaled = validate.copy()
+    test_scaled = test.copy()
+
+    #scale them!
+    #make the thing
+    scaler = MinMaxScaler()
+
+    #fit the thing
+    scaler.fit(train[to_scale])
+
+    #use the thing
+    train_scaled[to_scale] = scaler.transform(train[to_scale])
+    validate_scaled[to_scale] = scaler.transform(validate[to_scale])
+    test_scaled[to_scale] = scaler.transform(test[to_scale])
+    
+    return train_scaled, validate_scaled, test_scaled
