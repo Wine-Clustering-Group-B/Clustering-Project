@@ -572,13 +572,11 @@ Validation/Out-of-Sample:  {rmse_val}
 Test/Out-of-Sample: {rmse_test}
 difference:  {rmse_test - rmse_val}""")
 #------------------------------------------------------------------------------
-
-    
 def citric_acid_pH_clusters(train):
     X = train[['citric_acid', 'pH']]
 
     # MAKE the thing
-    kmeans = KMeans(n_clusters=6)
+    kmeans = KMeans(n_clusters=4)
     
     # FIT the thing
     kmeans.fit(X)
@@ -676,7 +674,7 @@ def sulphates_and_alcohol_clusters(train):
     X3 = train[['sulphates', 'alcohol']]
 
     # MAKE the thing
-    kmeans3 = KMeans(n_clusters=5)
+    kmeans3 = KMeans(n_clusters=4)
     
     # FIT the thing
     kmeans3.fit(X3)
@@ -718,3 +716,51 @@ def sulphates_and_alcohol_clusters(train):
     
     plt.legend(bbox_to_anchor=(1, 1), loc='upper left');
 #------------------------------------------------------------------------------
+def volatile_acidity_density_clusters(train):
+    
+    from sklearn.cluster import KMeans
+
+    X3 = train[['volatile_acidity', 'density']]
+
+    # MAKE the thing
+    kmeans3 = KMeans(n_clusters=4)
+    
+    # FIT the thing
+    kmeans3.fit(X3)
+    
+    # USE (predict using) the thing 
+    kmeans3.predict(X3)
+    
+    # make a new column names cluster in wines and X dataframe
+
+    train['cluster3'] = kmeans3.predict(X3)
+
+    X3['cluster3'] = kmeans3.predict(X3)
+    
+    kmeans3.cluster_centers_
+    
+    centroids3 = pd.DataFrame(kmeans3.cluster_centers_, columns = X3.columns[:2])
+
+    train['cluster3'] = train.cluster3
+
+    # lets visualize the clusters along with the centers on unscaled data
+    plt.figure(figsize=(14, 9))
+    plt.figure(figsize=(14, 9))
+    
+    
+    # scatter plot of data with hue for cluster
+    sns.scatterplot(x = 'volatile_acidity', y = 'density', data = train, hue = 'cluster3')
+    
+    
+    # plot cluster centers (centroids)
+    centroids3.plot.scatter(x = 'volatile_acidity', y = 'density', ax = plt.gca(), color ='k', alpha = 0.3, s = 800, marker = (8,1,0), label = 'centroids3')
+    
+    plt.title('Visualizing Cluster Centers')
+    
+    # Get unique cluster labels
+    unique_clusters = train['cluster3'].unique()
+    
+    # Create legend labels for clusters
+    cluster_labels = [f'Cluster3 {cluster}' for cluster in unique_clusters]
+    
+    plt.legend(bbox_to_anchor=(1, 1), loc='upper left');
