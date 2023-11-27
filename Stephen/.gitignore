@@ -1,0 +1,9 @@
+.DS_Store
+.ipynb_checkpoints/
+.virtual_documents
+_pycache_
+*.xlsx
+*.csv
+nikki_env.py
+saul_env.py
+stephen_env.py
