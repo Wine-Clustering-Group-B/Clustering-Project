@@ -37,3 +37,57 @@ def wine_df ():
         wine_df.to_csv('wine.csv')
         
     return wine_df
+
+
+
+#----------------Outliers--------------#
+def remove_outliers(df, k, col_list):
+    ''' remove outliers from a list of columns in a dataframe 
+        and return that dataframe
+    '''
+    
+    for col in col_list:
+        
+        # For each column, it calculates the first quartile (q1) and 
+        #third quartile (q3) using the .quantile() method, where q1 
+        #corresponds to the 25th percentile and q3 corresponds to the 75th percentile.
+        q1, q3 = df[col].quantile([.25, .75])  # get quartiles
+        
+        iqr = q3 - q1   # calculate interquartile range
+        
+        upper_bound = q3 + k * iqr   # get upper bound
+        lower_bound = q1 - k * iqr   # get lower bound
+
+        # return dataframe without outliers
+        
+        df = df[(df[col] > lower_bound) & (df[col] < upper_bound)]
+        
+    return df
+
+
+
+#----------------Clean-----------------#
+def clean_wine(df):
+    '''
+    This will rename the columns in the wine data base
+    '''
+    df.columns = df.columns.str.replace(' ','_')
+    
+    return df
+
+    
+    
+#-----------------Identify columns----------------#
+def identify_columns(df):
+    cat_cols, num_cols = [], []
+
+    for col in df.columns:
+        if df[col].dtype == 'O':
+            cat_cols.append(col)
+        else:
+            if df[col].nunique() < 10:
+                cat_cols.append(col)
+            else:
+                num_cols.append(col)
+
+    return cat_cols, num_cols
