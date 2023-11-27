@@ -237,7 +237,17 @@ def wrangle_zillow(df):
     
     return df
 #------------------------------------------------------------------------------
-
+def acquire_data():
+    white = pd.read_csv('white_wine.csv')
+    white_wines = 'White Wine'
+    white['Wine_Color'] = white_wines
+    red = pd.read_csv('red_wine.csv')
+    red_wines = 'Red Wine'
+    red['Wine_Color'] = red_wines
+    frames = [white, red]
+    wines = pd.concat(frames)
+    wines = wines.rename(columns=({'fixed acidity': 'fixed_acidity', 'volatile acidity': 'volatile_acidity', 'citric acid': 'citric_acid', 'residual sugar': 'residual_sugar', 'free sulfur dioxide': 'free_sulfur_dioxide', 'total sulfur dioxide':'total_sulfur_dioxide'}))
+    return wines
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
