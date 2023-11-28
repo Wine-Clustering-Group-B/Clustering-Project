@@ -442,39 +442,37 @@ def volatile_acidity_density_clusters(train, validate, test):
     
     plt.legend(bbox_to_anchor=(1, 1), loc='upper left');
 #------------------------------------------------------------------------------
+def evaluate_reg(y, yhat):
+        '''
+        based on two series, y_act, y_pred, (y, yhat), we
+        evaluate and return the root mean squared error
+        as well as the explained variance for the data.
+        
+        returns: rmse (float), rmse (float)
+        '''
+        rmse = mean_squared_error(y, yhat, squared=False)
+        r2 = r2_score(y, yhat)
+        return rmse, r2
+#------------------------------------------------------------------------------
+
 def get_baseline(train):
     X = train.drop(columns={'quality'})
     y = train['quality']
     
     from sklearn.linear_model import LinearRegression
+    baseline = y.mean()
+    y.shape
+    
+    baseline_array = np.repeat(baseline, y.shape[0])
+    baseline_rmse, baseline_r2 = evaluate_reg(y, baseline_array)
 
-    #make
-    lm = LinearRegression()
-    #fit
-    lm.fit(X,y)
-    #use
-    yhat = lm.predict(X)
+    eval_df = pd.DataFrame([{
+        'model': 'baseline',
+        'rmse': baseline_rmse,
+        'r2': baseline_r2
+    }])
     
-    baseline_med = y.median()
-    baseline_mean = y.mean()
-    
-    y_pred = pd.DataFrame(
-    {
-    'y_act': y.values,
-    'yhat' : yhat,
-    'baseline_med': baseline_med,
-    'baseline_mean': baseline_mean
-    }, index=train.index)
-    
-    # compute the error on these two baselines: I want the lower RSME for the baseline
-    mean_baseline_rmse = mean_squared_error(y_pred.baseline_mean, y) ** (1/2)
-    med_baseline_rmse = mean_squared_error(y_pred.baseline_med, y) ** (1/2)
-    
-    baseline = mean_baseline_rmse
-    baseline_rmse = mean_baseline_rmse
-    
-    return baseline, baseline_rmse
-#------------------------------------------------------------------------------
+    return baseline, baseline_rmse, baseline_r2
 
 #------------------------------------------------------------------------------
 
@@ -600,3 +598,54 @@ def break_em_out(preprocessed_train, preprocessed_validate, preprocessed_test):
     return X_train, y_train, X_val, y_val, X_test, y_test
 
 #------------------------------------------------------------------------------
+def OLS_test(X_train, y_train, baseline, X_val, y_val, X_test, y_test):
+    from sklearn.linear_model import LinearRegression
+    # MAKE THE THING: create the model object
+    linear_model = LinearRegression()
+    #1. FIT THE THING: fit the model to training data
+    OLSmodel = linear_model.fit(X_train, y_train)
+
+    #2. USE THE THING: make a prediction
+    y_train_pred = linear_model.predict(X_train)
+    #3. Evaluate: RMSE
+    rmse_train = mean_squared_error(y_train, y_train_pred) ** (.5) # 0.5 to get the root
+    
+    # convert results into dataframe
+    result = pd.DataFrame({
+        "target": y_train,
+        "OLS_prediction": y_train_pred,
+        "baseline_pred": baseline
+    })
+    
+        # convert to dataframe
+    X_val = pd.DataFrame(X_val)
+    X_val[X_val.columns] = X_val
+    X_val = X_val[X_train.columns]
+    
+    #2. USE THE THING: make a prediction
+    y_val_pred = linear_model.predict(X_val)
+    
+    #3. Evaluate: RMSE
+    rmse_val = mean_squared_error(y_val, y_val_pred) ** (.5) # 0.5 to get the root
+    
+    # convert to dataframe
+    X_test = pd.DataFrame(X_test)
+    X_test[X_test.columns] = X_test
+    X_test = X_test[X_train.columns]
+    
+    #2. USE THE THING: make a prediction
+    y_test_pred = linear_model.predict(X_test)
+    
+    #3. Evaluate: RMSE
+    rmse_test = mean_squared_error(y_test, y_test_pred) ** (.5) # 0.5 to get the root
+    
+    OLSmodel.coef_
+
+    
+    print(f"""RMSE for Ordinary Least Squares Test Model
+_____________________________________________
+Baseline: {baseline}
+Training/In-Sample:  {rmse_train} 
+Validation/Out-of-Sample:  {rmse_val}
+Test/Out-of-Sample: {rmse_test}
+difference:  {rmse_test - rmse_val}""")

@@ -14,6 +14,19 @@ drivers of wine quality for the California Wine Institute.
 Project Goal:  Predict the quality of wine while incorporating unsupervised learning techniques.
 
 |------------------------------------------------------------------------------------------------------------------------------------------|
+Initial Questions:
+
+1. Are any of the features correlated? Can I apply some sort of feature selection?
+
+2. Should I look at the top 'x' best and bottom 'x' worst wines for comparison? Is that a way to gain perspective?
+
+3. What features would make good clusters? Should I use a heatmap?
+
+4. Classification or regression? Should I do both for a comparison given the time I have to work on this?
+
+5. Are all input variables relevant?
+
+|------------------------------------------------------------------------------------------------------------------------------------------|
 
 Project Plan:
 
@@ -60,15 +73,46 @@ These variables were based on physicochemical tests. Physicochemical tests are: 
 
 Conclusions:
 
+<b>After acquiring & preparing the data, we conducted uni/bi/multi-variate exploration on the wine data to look at features and how they might impact the target 'quality'.
+
+<b>We paired various features together and used clustering to observe potential relationships between the features.
+     
+<b>The results of our data exploration culminated in the resulting clusters and features being selected to go into regression modeling:
+
+- Wine Color
+- Chlorides
+- Clustering of Alcohol and Sulphates
+- Clustering of Citric Acid and pH
+- Clustering of Free Sulfur Dioxide and Total Sulfur Dioxide
+- Volatile Acidity and Density
+
+<b>We chose to go with regression modeling due to all of our features being continuous. 
+
+<b>We used the following regression models:
+- Ordinary Least Squares (OLS)
+- LassoLars
+- Generalized Linear Model (GLM)
+
+<b>We found that our Ordinary Least Squares model was the best performing model, showcasing a 12% average model prediction error on unseen data.
 |------------------------------------------------------------------------------------------------------------------------------------------|
 
 
 Next Steps:
 
+<b>The nexts steps would be to look at conducting this entire study without the use of clustering, using the same models, to compare results and observe the impact of clustering to the modeling results.
+
+<b>Furthermore, additional study on features for both red and white wines 'individually', given sufficient time, could prove insightful in determining the best drivers of quality for each colored wine.
+    
+<b>Lastly, if there happens to be additional data that becomes available, it could prove useful as there are likely other outside features that contribute to wine quality (grape quality, climate grapes grown, fermentation process, etc.) that could be stronger drivers of quality not provided by our current data source.
 |------------------------------------------------------------------------------------------------------------------------------------------|
 
 Recommendations:  
 
+<b>The data source showed a larger percentage of white wines produced compared to red wines, which could have produced a bias in the data that skewed the data. The data could be reduced to even out the differences between red and wines. 
+    
+<b>There could be an issue with oxidation in the wines. The lower quality wines have lower amounts of sulphates, and we think that by increasing the amount of sulphates, the oxidation issues would be remedied and improve the quality of wines. 
+        
+<b>Higher alcohol content is a major factor in the higher quality wines, specifically white wines. A two-fold effort can be enacted to maximize marketing towards white wine (where high quality is aplenty) and to chemically increase the alcohol while balancing the acidity to sufficiently improve quality in the red wines. 
 |------------------------------------------------------------------------------------------------------------------------------------------|
 
 Steps to Reproduce Our Work:
