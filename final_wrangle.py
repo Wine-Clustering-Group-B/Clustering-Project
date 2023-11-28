@@ -202,10 +202,11 @@ def scale_data(train,
 #------------------------------------------------------------------------------
 def citric_acid_pH_clusters(train, validate, test):
     X = train[['citric_acid', 'pH']]
-    X2 = validate[['citric_acid', 'pH']]
-    X3 = test[['citric_acid', 'pH']]
+
 
     # MAKE the thing
+    from sklearn.cluster import KMeans
+
     kmeans = KMeans(n_clusters=4)
     
     # FIT the thing
@@ -213,18 +214,19 @@ def citric_acid_pH_clusters(train, validate, test):
     
     # USE (predict using) the thing 
     kmeans.predict(X)
-    kmeans.predict(X2)
-    kmeans.predict(X3)
+
     # make a new column names cluster in wines and X dataframe
 
     train['citric_pH_cluster'] = kmeans.predict(X)
-    validate['citric_pH_cluster'] = kmeans.predict(X2)
-    test['citric_pH_cluster'] = kmeans.predict(X3)
+
 
     X['citric_pH_cluster'] = kmeans.predict(X)
-    X2['citric_pH_cluster'] = kmeans.predict(X2)
-    X3['citric_pH_cluster'] = kmeans.predict(X3)
 
+    V1 = validate[['citric_acid', 'pH']]
+    kmeans.predict(V1)
+    
+    T1 = test[['citric_acid', 'pH']]
+    kmeans.predict(T1)
     
     # Cluster Centers aka centroids. -- The output is also not scaled; 
     # it would be scaled if the data used to fit was scaled.
@@ -234,8 +236,7 @@ def citric_acid_pH_clusters(train, validate, test):
     centroids = pd.DataFrame(kmeans.cluster_centers_, columns = X.columns[:2])
     
     train['citric_pH_cluster'] = train.citric_pH_cluster
-    validate['citric_pH_cluster'] = validate.citric_pH_cluster
-    test['citric_pH_cluster'] = test.citric_pH_cluster
+
 
 
     # lets visualize the clusters along with the centers on unscaled data
@@ -262,10 +263,10 @@ def citric_acid_pH_clusters(train, validate, test):
 #------------------------------------------------------------------------------
 def total_sulfur_dioxide_and_free_sulfur_dioxide_cluster(train, validate, test):
     X2 = train[['total_sulfur_dioxide', 'free_sulfur_dioxide']]
-    X3 = validate[['total_sulfur_dioxide', 'free_sulfur_dioxide']]
-    X4 = test[['total_sulfur_dioxide', 'free_sulfur_dioxide']]
 
     # MAKE the thing
+    from sklearn.cluster import KMeans
+
     kmeans2 = KMeans(n_clusters=4)
     
     # FIT the thing
@@ -273,27 +274,29 @@ def total_sulfur_dioxide_and_free_sulfur_dioxide_cluster(train, validate, test):
     
     # USE (predict using) the thing 
     kmeans2.predict(X2)
-    kmeans2.predict(X3)
-    kmeans2.predict(X4)
+
 
     # make a new column names cluster in wines and X dataframe
 
     train['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X2)
-    validate['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X3)
-    test['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X4)
 
 
     X2['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X2)
-    X3['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X3)
-    X4['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X4)
 
+    V1 = validate[['total_sulfur_dioxide', 'free_sulfur_dioxide']]
+    
+    from sklearn.cluster import KMeans
+    kmeans.predict(V1)
+    
+    T1 = test[['total_sulfur_dioxide', 'free_sulfur_dioxide']]
+    kmeans.predict(T1)
+    
     kmeans2.cluster_centers_
         
     centroids2 = pd.DataFrame(kmeans2.cluster_centers_, columns = X2.columns[:2])
 
     train['total_free_sulfur_dioxide_cluster'] = train.total_free_sulfur_dioxide_cluster
-    validate['total_free_sulfur_dioxide_cluster'] = validate.total_free_sulfur_dioxide_cluster
-    test['total_free_sulfur_dioxide_cluster'] = test.total_free_sulfur_dioxide_cluster
+
 
     
     # lets visualize the clusters along with the centers on unscaled data
@@ -327,6 +330,8 @@ def sulphates_and_alcohol_clusters(train, validate, test):
     X3 = train[['sulphates', 'alcohol']]
 
     # MAKE the thing
+    from sklearn.cluster import KMeans
+
     kmeans3 = KMeans(n_clusters=4)
     
     # FIT the thing
@@ -342,6 +347,12 @@ def sulphates_and_alcohol_clusters(train, validate, test):
 
     X3['sulphate_alcohol_cluster'] = kmeans3.predict(X3)
     
+    V1 = validate[['sulphates', 'alcohol']]
+    kmeans.predict(V1)
+    
+    T1 = test[['sulphates', 'alcohol']]
+    kmeans.predict(T1)    
+
     kmeans3.cluster_centers_
     
     centroids3 = pd.DataFrame(kmeans3.cluster_centers_, columns = X3.columns[:2])
@@ -378,6 +389,8 @@ def volatile_acidity_density_clusters(train, validate, test):
     X3 = train[['volatile_acidity', 'density']]
 
     # MAKE the thing
+    from sklearn.cluster import KMeans
+
     kmeans3 = KMeans(n_clusters=4)
     
     # FIT the thing
@@ -393,6 +406,13 @@ def volatile_acidity_density_clusters(train, validate, test):
 
     X3['volatile_acidity_density_cluster'] = kmeans3.predict(X3)
     
+    V1 = validate[['volatile_acidity', 'density']]
+    kmeans.predict(V1)
+    
+    T1 = test[['volatile_acidity', 'density']]
+    kmeans.predict(T1)    
+    
+
     kmeans3.cluster_centers_
     
     centroids3 = pd.DataFrame(kmeans3.cluster_centers_, columns = X3.columns[:2])
@@ -485,7 +505,7 @@ def OLS(X_train, y_train, baseline, X_val, y_val):
     # convert to dataframe
     X_val = pd.DataFrame(X_val)
     X_val[X_val.columns] = X_val
-    X_val = X_val[X_train.columns]
+    X_val = X_val[X_val.columns]
     
     #2. USE THE THING: make a prediction
     y_val_pred = linear_model.predict(X_val)
