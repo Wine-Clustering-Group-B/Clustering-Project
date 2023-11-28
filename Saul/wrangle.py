@@ -586,9 +586,9 @@ def citric_acid_pH_clusters(train):
     
     # make a new column names cluster in wines and X dataframe
 
-    train['cluster'] = kmeans.predict(X)
+    train['citric_pH_cluster'] = kmeans.predict(X)
     
-    X['cluster'] = kmeans.predict(X)
+    X['citric_pH_cluster'] = kmeans.predict(X)
     
     # Cluster Centers aka centroids. -- The output is also not scaled; 
     # it would be scaled if the data used to fit was scaled.
@@ -597,14 +597,14 @@ def citric_acid_pH_clusters(train):
     
     centroids = pd.DataFrame(kmeans.cluster_centers_, columns = X.columns[:2])
     
-    train['cluster'] = train.cluster
+    train['citric_pH_cluster'] = train.citric_pH_cluster
     # lets visualize the clusters along with the centers on unscaled data
     plt.figure(figsize=(14, 9))
     plt.figure(figsize=(14, 9))
     
     
     # scatter plot of data with hue for cluster
-    sns.scatterplot(x = 'citric_acid', y = 'pH', data = train, hue = 'cluster')
+    sns.scatterplot(x = 'citric_acid', y = 'pH', data = train, hue = 'citric_pH_cluster')
     
     
     # plot cluster centers (centroids)
@@ -613,10 +613,10 @@ def citric_acid_pH_clusters(train):
     plt.title('Visualizing Cluster Centers')
     
     # Get unique cluster labels
-    unique_clusters = train['cluster'].unique()
+    unique_clusters = train['citric_pH_cluster'].unique()
     
     # Create legend labels for clusters
-    cluster_labels = [f'Cluster {cluster}' for cluster in unique_clusters]
+    cluster_labels = [f'citric_pH_cluster {cluster}' for cluster in unique_clusters]
     
     plt.legend(bbox_to_anchor=(1, 1), loc='upper left');
 #------------------------------------------------------------------------------
@@ -634,15 +634,15 @@ def total_sulfur_dioxide_and_free_sulfur_dioxide_cluster(train):
     
     # make a new column names cluster in wines and X dataframe
 
-    train['cluster2'] = kmeans2.predict(X2)
+    train['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X2)
     
-    X2['cluster2'] = kmeans2.predict(X2)
+    X2['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X2)
     
     kmeans2.cluster_centers_
         
     centroids2 = pd.DataFrame(kmeans2.cluster_centers_, columns = X2.columns[:2])
 
-    train['cluster2'] = train.cluster2
+    train['total_free_sulfur_dioxide_cluster'] = train.total_free_sulfur_dioxide_cluster
 
     # lets visualize the clusters along with the centers on unscaled data
     plt.figure(figsize=(14, 9))
@@ -650,7 +650,7 @@ def total_sulfur_dioxide_and_free_sulfur_dioxide_cluster(train):
     
     
     # scatter plot of data with hue for cluster
-    sns.scatterplot(x = 'total_sulfur_dioxide', y = 'free_sulfur_dioxide', data = train, hue = 'cluster2')
+    sns.scatterplot(x = 'total_sulfur_dioxide', y = 'free_sulfur_dioxide', data = train, hue = 'total_free_sulfur_dioxide_cluster')
     
     
     # plot cluster centers (centroids)
@@ -660,10 +660,10 @@ def total_sulfur_dioxide_and_free_sulfur_dioxide_cluster(train):
     plt.title('Visualizing Cluster Centers')
     
     # Get unique cluster labels
-    unique_clusters = train['cluster2'].unique()
+    unique_clusters = train['total_free_sulfur_dioxide_cluster'].unique()
     
     # Create legend labels for clusters
-    cluster_labels = [f'Cluster2 {cluster}' for cluster in unique_clusters]
+    cluster_labels = [f'total_free_sulfur_dioxide_cluster {cluster}' for cluster in unique_clusters]
     
     plt.legend(bbox_to_anchor=(1, 1), loc='upper left');
 #------------------------------------------------------------------------------
@@ -684,15 +684,15 @@ def sulphates_and_alcohol_clusters(train):
     
     # make a new column names cluster in wines and X dataframe
 
-    train['cluster3'] = kmeans3.predict(X3)
+    train['sulphate_alcohol_cluster'] = kmeans3.predict(X3)
 
-    X3['cluster3'] = kmeans3.predict(X3)
+    X3['sulphate_alcohol_cluster'] = kmeans3.predict(X3)
     
     kmeans3.cluster_centers_
     
     centroids3 = pd.DataFrame(kmeans3.cluster_centers_, columns = X3.columns[:2])
 
-    train['cluster3'] = train.cluster3
+    train['sulphate_alcohol_cluster'] = train.sulphate_alcohol_cluster
 
     # lets visualize the clusters along with the centers on unscaled data
     plt.figure(figsize=(14, 9))
@@ -700,7 +700,7 @@ def sulphates_and_alcohol_clusters(train):
     
     
     # scatter plot of data with hue for cluster
-    sns.scatterplot(x = 'sulphates', y = 'alcohol', data = train, hue = 'cluster3')
+    sns.scatterplot(x = 'sulphates', y = 'alcohol', data = train, hue = 'sulphate_alcohol_cluster')
     
     
     # plot cluster centers (centroids)
@@ -709,10 +709,10 @@ def sulphates_and_alcohol_clusters(train):
     plt.title('Visualizing Cluster Centers')
     
     # Get unique cluster labels
-    unique_clusters = train['cluster3'].unique()
+    unique_clusters = train['sulphate_alcohol_cluster'].unique()
     
     # Create legend labels for clusters
-    cluster_labels = [f'Cluster3 {cluster}' for cluster in unique_clusters]
+    cluster_labels = [f'sulphate_alcohol_cluster {cluster}' for cluster in unique_clusters]
     
     plt.legend(bbox_to_anchor=(1, 1), loc='upper left');
 #------------------------------------------------------------------------------
@@ -733,15 +733,15 @@ def volatile_acidity_density_clusters(train):
     
     # make a new column names cluster in wines and X dataframe
 
-    train['cluster3'] = kmeans3.predict(X3)
+    train['volatile_acidity_density_cluster'] = kmeans3.predict(X3)
 
-    X3['cluster3'] = kmeans3.predict(X3)
+    X3['volatile_acidity_density_cluster'] = kmeans3.predict(X3)
     
     kmeans3.cluster_centers_
     
     centroids3 = pd.DataFrame(kmeans3.cluster_centers_, columns = X3.columns[:2])
 
-    train['cluster3'] = train.cluster3
+    train['volatile_acidity_density_cluster'] = train.volatile_acidity_density_cluster
 
     # lets visualize the clusters along with the centers on unscaled data
     plt.figure(figsize=(14, 9))
@@ -749,7 +749,7 @@ def volatile_acidity_density_clusters(train):
     
     
     # scatter plot of data with hue for cluster
-    sns.scatterplot(x = 'volatile_acidity', y = 'density', data = train, hue = 'cluster3')
+    sns.scatterplot(x = 'volatile_acidity', y = 'density', data = train, hue = 'volatile_acidity_density_cluster')
     
     
     # plot cluster centers (centroids)
@@ -758,9 +758,24 @@ def volatile_acidity_density_clusters(train):
     plt.title('Visualizing Cluster Centers')
     
     # Get unique cluster labels
-    unique_clusters = train['cluster3'].unique()
+    unique_clusters = train['volatile_acidity_density_cluster'].unique()
     
     # Create legend labels for clusters
-    cluster_labels = [f'Cluster3 {cluster}' for cluster in unique_clusters]
+    cluster_labels = [f'volatile_acidity_density_cluster {cluster}' for cluster in unique_clusters]
     
     plt.legend(bbox_to_anchor=(1, 1), loc='upper left');
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
