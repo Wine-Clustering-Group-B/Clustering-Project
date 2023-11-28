@@ -93,25 +93,25 @@ These variables were based on physicochemical tests. Physicochemical tests are: 
 - LassoLars
 - Generalized Linear Model (GLM)
 
-We found that our Ordinary Least Squares model was the best performing model, showcasing a 12% average model prediction error on unseen data.
+<b>We found that our Ordinary Least Squares model was the best performing model, showcasing a 12% average model prediction error on unseen data.
 |--------------------------------------------------------------------------------------------------------------|
 
 <b>Next Steps:
 
-The nexts steps would be to look at conducting this entire study without the use of clustering, using the same models, to compare results and observe the impact of clustering to the modeling results.
+- We would look at conducting this entire study without the use of clustering, using the same models, to compare results and observe the impact of clustering to the modeling results.
 
-Furthermore, additional study on features for both red and white wines 'individually', given sufficient time, could prove insightful in determining the best drivers of quality for each colored wine.
+- Furthermore, additional study on features for both red and white wines 'individually', given sufficient time, could prove insightful in determining the best drivers of quality for each colored wine.
     
-Lastly, if there happens to be additional data that becomes available, it could prove useful as there are likely other outside features that contribute to wine quality (grape quality, climate grapes grown, fermentation process, etc.) that could be stronger drivers of quality not provided by our current data source.
+- Lastly, if there happens to be additional data that becomes available, it could prove useful as there are likely other outside features that contribute to wine quality (grape quality, climate grapes grown, fermentation process, etc.) that could be stronger drivers of quality not provided by our current data source.
 |--------------------------------------------------------------------------------------------------------------|
 
 <b>Recommendations:  
 
-The data source showed a larger percentage of white wines produced compared to red wines, which could have produced a bias in the data that skewed the data. The data could be reduced to even out the differences between red and wines. 
+- The data source showed a larger percentage of white wines produced compared to red wines, which could have produced a bias in the data that skewed the data. The data could be reduced to even out the differences between red and wines. 
     
-There could be an issue with oxidation in the wines. The lower quality wines have lower amounts of sulphates, and we think that by increasing the amount of sulphates, the oxidation issues would be remedied and improve the quality of wines. 
+- There could be an issue with oxidation in the wines. The lower quality wines have lower amounts of sulphates, and we think that by increasing the amount of sulphates, the oxidation issues would be remedied and improve the quality of wines. 
         
-Higher alcohol content is a major factor in the higher quality wines, specifically white wines. A two-fold effort can be enacted to maximize marketing towards white wine (where high quality is aplenty) and to chemically increase the alcohol while balancing the acidity to sufficiently improve quality in the red wines. 
+- Higher alcohol content is a major factor in the higher quality wines, specifically white wines. A two-fold effort can be enacted to maximize marketing towards white wine (where high quality is aplenty) and to chemically increase the alcohol while balancing the acidity to sufficiently improve quality in the red wines. 
 
 
 <b>Steps to Reproduce Our Work:
