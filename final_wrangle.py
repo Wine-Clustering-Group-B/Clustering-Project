@@ -8,7 +8,40 @@ from sklearn.model_selection import train_test_split
 import sklearn
 from sklearn.preprocessing import MinMaxScaler
     
+from sklearn.cluster import KMeans
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
+from sklearn.metrics import explained_variance_score
 
+from sklearn.feature_selection import SelectKBest, RFE, f_regression, SequentialFeatureSelector
+#imports for regression modeling
+
+from sklearn.linear_model import LogisticRegression
+# import K Nearest neighbors:
+from sklearn.neighbors import KNeighborsClassifier
+# import Decision Trees:
+from sklearn.tree import DecisionTreeClassifier, export_text, plot_tree
+# import Random Forest:
+from sklearn.ensemble import RandomForestClassifier
+
+from sklearn.metrics import classification_report, confusion_matrix
+
+# interpreting our models:
+import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+#feature selection
+from sklearn.feature_selection import SelectKBest, RFE, f_regression, SequentialFeatureSelector
+
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
+from sklearn.metrics import explained_variance_score
+
+from sklearn.linear_model import LinearRegression
+
+from scipy import stats
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 #--------------- Data Acqusition -------------------#
 def wine_df ():
@@ -166,3 +199,384 @@ def scale_data(train,
     test_scaled[to_scale] = scaler.transform(test[to_scale])
     
     return train_scaled, validate_scaled, test_scaled
+#------------------------------------------------------------------------------
+def citric_acid_pH_clusters(train, validate, test):
+    X = train[['citric_acid', 'pH']]
+    X2 = validate[['citric_acid', 'pH']]
+    X3 = test[['citric_acid', 'pH']]
+
+    # MAKE the thing
+    kmeans = KMeans(n_clusters=4)
+    
+    # FIT the thing
+    kmeans.fit(X)
+    
+    # USE (predict using) the thing 
+    kmeans.predict(X)
+    kmeans.predict(X2)
+    kmeans.predict(X3)
+    # make a new column names cluster in wines and X dataframe
+
+    train['citric_pH_cluster'] = kmeans.predict(X)
+    validate['citric_pH_cluster'] = kmeans.predict(X2)
+    test['citric_pH_cluster'] = kmeans.predict(X3)
+
+    X['citric_pH_cluster'] = kmeans.predict(X)
+    X2['citric_pH_cluster'] = kmeans.predict(X2)
+    X3['citric_pH_cluster'] = kmeans.predict(X3)
+
+    
+    # Cluster Centers aka centroids. -- The output is also not scaled; 
+    # it would be scaled if the data used to fit was scaled.
+
+    kmeans.cluster_centers_
+    
+    centroids = pd.DataFrame(kmeans.cluster_centers_, columns = X.columns[:2])
+    
+    train['citric_pH_cluster'] = train.citric_pH_cluster
+    validate['citric_pH_cluster'] = validate.citric_pH_cluster
+    test['citric_pH_cluster'] = test.citric_pH_cluster
+
+
+    # lets visualize the clusters along with the centers on unscaled data
+    plt.figure(figsize=(14, 9))
+    plt.figure(figsize=(14, 9))
+    
+    
+    # scatter plot of data with hue for cluster
+    sns.scatterplot(x = 'citric_acid', y = 'pH', data = train, hue = 'citric_pH_cluster')
+    
+    
+    # plot cluster centers (centroids)
+    centroids.plot.scatter(x = 'citric_acid', y = 'pH', ax = plt.gca(), color ='k', alpha = 0.3, s = 800, marker = (8,1,0), label = 'centroids')
+    
+    plt.title('Visualizing Cluster Centers')
+    
+    # Get unique cluster labels
+    unique_clusters = train['citric_pH_cluster'].unique()
+    
+    # Create legend labels for clusters
+    cluster_labels = [f'citric_pH_cluster {cluster}' for cluster in unique_clusters]
+    
+    plt.legend(bbox_to_anchor=(1, 1), loc='upper left');
+#------------------------------------------------------------------------------
+def total_sulfur_dioxide_and_free_sulfur_dioxide_cluster(train, validate, test):
+    X2 = train[['total_sulfur_dioxide', 'free_sulfur_dioxide']]
+    X3 = validate[['total_sulfur_dioxide', 'free_sulfur_dioxide']]
+    X4 = test[['total_sulfur_dioxide', 'free_sulfur_dioxide']]
+
+    # MAKE the thing
+    kmeans2 = KMeans(n_clusters=4)
+    
+    # FIT the thing
+    kmeans2.fit(X2)
+    
+    # USE (predict using) the thing 
+    kmeans2.predict(X2)
+    kmeans2.predict(X3)
+    kmeans2.predict(X4)
+
+    # make a new column names cluster in wines and X dataframe
+
+    train['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X2)
+    validate['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X3)
+    test['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X4)
+
+
+    X2['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X2)
+    X3['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X3)
+    X4['total_free_sulfur_dioxide_cluster'] = kmeans2.predict(X4)
+
+    kmeans2.cluster_centers_
+        
+    centroids2 = pd.DataFrame(kmeans2.cluster_centers_, columns = X2.columns[:2])
+
+    train['total_free_sulfur_dioxide_cluster'] = train.total_free_sulfur_dioxide_cluster
+    validate['total_free_sulfur_dioxide_cluster'] = validate.total_free_sulfur_dioxide_cluster
+    test['total_free_sulfur_dioxide_cluster'] = test.total_free_sulfur_dioxide_cluster
+
+    
+    # lets visualize the clusters along with the centers on unscaled data
+    plt.figure(figsize=(14, 9))
+    plt.figure(figsize=(14, 9))
+    
+    
+    # scatter plot of data with hue for cluster
+    sns.scatterplot(x = 'total_sulfur_dioxide', y = 'free_sulfur_dioxide', data = train, hue = 'total_free_sulfur_dioxide_cluster')
+    
+    
+    # plot cluster centers (centroids)
+    centroids2.plot.scatter(x = 'total_sulfur_dioxide', y = 'free_sulfur_dioxide', ax = plt.gca(), color ='k', alpha = 0.3, s = 800, marker = (8,1,0), label = 'centroids2')
+    
+    
+    plt.title('Visualizing Cluster Centers')
+    
+    # Get unique cluster labels
+    unique_clusters = train['total_free_sulfur_dioxide_cluster'].unique()
+    
+    # Create legend labels for clusters
+    cluster_labels = [f'total_free_sulfur_dioxide_cluster {cluster}' for cluster in unique_clusters]
+    
+    
+    plt.legend(bbox_to_anchor=(1, 1), loc='upper left');
+#------------------------------------------------------------------------------
+def sulphates_and_alcohol_clusters(train, validate, test):
+    
+    from sklearn.cluster import KMeans
+
+    X3 = train[['sulphates', 'alcohol']]
+
+    # MAKE the thing
+    kmeans3 = KMeans(n_clusters=4)
+    
+    # FIT the thing
+    kmeans3.fit(X3)
+    
+    # USE (predict using) the thing 
+    kmeans3.predict(X3)
+    
+    # make a new column names cluster in wines and X dataframe
+
+    train['sulphate_alcohol_cluster'] = kmeans3.predict(X3)
+
+
+    X3['sulphate_alcohol_cluster'] = kmeans3.predict(X3)
+    
+    kmeans3.cluster_centers_
+    
+    centroids3 = pd.DataFrame(kmeans3.cluster_centers_, columns = X3.columns[:2])
+
+    train['sulphate_alcohol_cluster'] = train.sulphate_alcohol_cluster
+
+
+    # lets visualize the clusters along with the centers on unscaled data
+    plt.figure(figsize=(14, 9))
+    plt.figure(figsize=(14, 9))
+    
+    
+    # scatter plot of data with hue for cluster
+    sns.scatterplot(x = 'sulphates', y = 'alcohol', data = train, hue = 'sulphate_alcohol_cluster')
+    
+    
+    # plot cluster centers (centroids)
+    centroids3.plot.scatter(x = 'sulphates', y = 'alcohol', ax = plt.gca(), color ='k', alpha = 0.3, s = 800, marker = (8,1,0), label = 'centroids3')
+    
+    plt.title('Visualizing Cluster Centers')
+    
+    # Get unique cluster labels
+    unique_clusters = train['sulphate_alcohol_cluster'].unique()
+    
+    # Create legend labels for clusters
+    cluster_labels = [f'sulphate_alcohol_cluster {cluster}' for cluster in unique_clusters]
+    
+    plt.legend(bbox_to_anchor=(1, 1), loc='upper left');
+#------------------------------------------------------------------------------
+def volatile_acidity_density_clusters(train, validate, test):
+    
+    from sklearn.cluster import KMeans
+
+    X3 = train[['volatile_acidity', 'density']]
+
+    # MAKE the thing
+    kmeans3 = KMeans(n_clusters=4)
+    
+    # FIT the thing
+    kmeans3.fit(X3)
+    
+    # USE (predict using) the thing 
+    kmeans3.predict(X3)
+    
+    # make a new column names cluster in wines and X dataframe
+
+    train['volatile_acidity_density_cluster'] = kmeans3.predict(X3)
+
+
+    X3['volatile_acidity_density_cluster'] = kmeans3.predict(X3)
+    
+    kmeans3.cluster_centers_
+    
+    centroids3 = pd.DataFrame(kmeans3.cluster_centers_, columns = X3.columns[:2])
+
+    train['volatile_acidity_density_cluster'] = train.volatile_acidity_density_cluster
+
+
+    # lets visualize the clusters along with the centers on unscaled data
+    plt.figure(figsize=(14, 9))
+    plt.figure(figsize=(14, 9))
+    
+    
+    # scatter plot of data with hue for cluster
+    sns.scatterplot(x = 'volatile_acidity', y = 'density', data = train, hue = 'volatile_acidity_density_cluster')
+    
+    
+    # plot cluster centers (centroids)
+    centroids3.plot.scatter(x = 'volatile_acidity', y = 'density', ax = plt.gca(), color ='k', alpha = 0.3, s = 800, marker = (8,1,0), label = 'centroids3')
+    
+    plt.title('Visualizing Cluster Centers')
+    
+    # Get unique cluster labels
+    unique_clusters = train['volatile_acidity_density_cluster'].unique()
+    
+    # Create legend labels for clusters
+    cluster_labels = [f'volatile_acidity_density_cluster {cluster}' for cluster in unique_clusters]
+    
+    plt.legend(bbox_to_anchor=(1, 1), loc='upper left');
+#------------------------------------------------------------------------------
+def get_baseline(train):
+    X = train.drop(columns={'quality'})
+    y = train['quality']
+    
+    from sklearn.linear_model import LinearRegression
+
+    #make
+    lm = LinearRegression()
+    #fit
+    lm.fit(X,y)
+    #use
+    yhat = lm.predict(X)
+    
+    baseline_med = y.median()
+    baseline_mean = y.mean()
+    
+    y_pred = pd.DataFrame(
+    {
+    'y_act': y.values,
+    'yhat' : yhat,
+    'baseline_med': baseline_med,
+    'baseline_mean': baseline_mean
+    }, index=train.index)
+    
+    # compute the error on these two baselines: I want the lower RSME for the baseline
+    mean_baseline_rmse = mean_squared_error(y_pred.baseline_mean, y) ** (1/2)
+    med_baseline_rmse = mean_squared_error(y_pred.baseline_med, y) ** (1/2)
+    
+    baseline = mean_baseline_rmse
+    baseline_rmse = mean_baseline_rmse
+    
+    return baseline, baseline_rmse
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+    
+#------------------------------------------------------------------------------
+def OLS(X_train, y_train, baseline, X_val, y_val):
+    from sklearn.linear_model import LinearRegression
+    # MAKE THE THING: create the model object
+    linear_model = LinearRegression()
+    #1. FIT THE THING: fit the model to training data
+    OLSmodel = linear_model.fit(X_train, y_train)
+
+    #2. USE THE THING: make a prediction
+    y_train_pred = linear_model.predict(X_train)
+    #3. Evaluate: RMSE
+    rmse_train = mean_squared_error(y_train, y_train_pred) ** (.5) # 0.5 to get the root
+    
+    # convert results into dataframe
+    result = pd.DataFrame({
+        "target": y_train,
+        "OLS_prediction": y_train_pred,
+        "baseline_pred": baseline
+    })
+    
+    # convert to dataframe
+    X_val = pd.DataFrame(X_val)
+    X_val[X_val.columns] = X_val
+    X_val = X_val[X_train.columns]
+    
+    #2. USE THE THING: make a prediction
+    y_val_pred = linear_model.predict(X_val)
+    
+    #3. Evaluate: RMSE
+    rmse_val = mean_squared_error(y_val, y_val_pred) ** (.5) # 0.5 to get the root
+    
+    OLSmodel.coef_
+    
+    
+    print(f"OLS Regressor \nRMSE_train {rmse_train} \
+\nRMSE_validate {rmse_val} \nR2_validate {explained_variance_score(y_val, y_val_pred)}")
+    
+#------------------------------------------------------------------------------
+def LassoLars(X_train, y_train, baseline, X_val, y_val):
+    from sklearn.linear_model import LassoLars
+
+    # MAKE THE THING: create the model object
+    lars = LassoLars(alpha= 1.0)
+    
+    #1. FIT THE THING: fit the model to training data
+    # We must specify the column in y_train, since we have converted it to a dataframe from a series!
+    laslars = lars.fit(X_train, y_train)
+    
+    #2. USE THE THING: make a prediction
+    y_train_pred_lars = lars.predict(X_train)
+    
+    #3. Evaluate: RMSE
+    rmse_train_lars = mean_squared_error(y_train, y_train_pred_lars) ** (0.5)
+    
+    # predict validate
+    y_val_pred_lars = lars.predict(X_val)
+    
+    # evaluate: RMSE
+    rmse_val_lars = mean_squared_error(y_val, y_val_pred_lars) ** (0.5)
+    
+    # how important is each feature to the target
+    laslars.coef_
+    
+    print(f"""RMSE for Lasso + Lars
+_____________________
+Training/In-Sample: {rmse_train_lars}, 
+Validation/Out-of-Sample:  {rmse_val_lars}
+Difference:  {rmse_val_lars - rmse_train_lars}""")
+#------------------------------------------------------------------------------
+
+def GLM(X_train, y_train, baseline, X_val, y_val):
+    from sklearn.linear_model import TweedieRegressor
+    # MAKE THE THING: create the model object
+    glm_model = TweedieRegressor(alpha= 1.0, power= 1)
+    
+    #1. FIT THE THING: fit the model to training data
+    # We must specify the column in y_train, since we have converted it to a dataframe from a series!
+    tweedieReg = glm_model.fit(X_train, y_train)
+    
+    #2. USE THE THING: make a prediction
+    y_train_pred_tweedie = glm_model.predict(X_train)
+    
+    #3. Evaluate: RMSE
+    rmse_train_tweedie = mean_squared_error(y_train, y_train_pred_tweedie) ** (0.5)
+    
+    # predict validate
+    y_val_pred_tweedie = glm_model.predict(X_val)
+    
+    # evaluate: RMSE
+    rmse_val_tweedie = mean_squared_error(y_val, y_val_pred_tweedie) ** (0.5)
+    
+    # how important is each feature to the target
+    tweedieReg.coef_
+    
+    print(f"""RMSE for Lasso + Lars
+_____________________
+Training/In-Sample: {rmse_train_tweedie}, 
+Validation/Out-of-Sample:  {rmse_val_tweedie}
+Difference:  {rmse_val_tweedie - rmse_train_tweedie}""")
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+def break_em_out(preprocessed_train, preprocessed_validate, preprocessed_test):
+    # train set
+    X_train = preprocessed_train.drop(columns=['quality']) 
+    y_train = preprocessed_train['quality']
+    
+    # validate set
+    X_val = preprocessed_validate.drop(columns=['quality']) 
+    y_val = preprocessed_validate['quality']
+    
+    # test
+    X_test = preprocessed_test.drop(columns=['quality'])
+    y_test = preprocessed_test['quality']
+    
+    return X_train, y_train, X_val, y_val, X_test, y_test
+
+#------------------------------------------------------------------------------
